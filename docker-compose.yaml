@@ -1,0 +1,52 @@
+version: "3"
+services:
+
+  front:
+    image: oksanik/quotes-front:v1
+    container_name: front
+    build:
+      context: front
+      dockerfile: Dockerfile
+    ports:
+      - "3001:3001"
+    networks:
+      - myapp
+
+  back:
+    image: oksanik/quotes-back:v1
+    container_name: api
+    build:
+      context: back
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - myapp
+
+  data:
+    image: oksanik/quotes-data:v1
+    container_name: db
+    build:
+      context: data
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: "mydatabase"
+      MYSQL_PASSWORD: "root"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+    networks:
+      - myapp
+
+  data-script:
+    image: oksanik/quotes-data-script:v1
+    container_name: data-script
+    build:
+      context: data-script
+      dockerfile: Dockerfile
+    networks:
+      - myapp
+
+networks:
+  myapp:
